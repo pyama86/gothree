@@ -2,22 +2,54 @@
 
 
 [[projects]]
-  name = "github.com/k0kubun/pp"
-  packages = ["."]
-  revision = "027a6d1765d673d337e687394dbe780dd64e2a1e"
-  version = "v2.3.0"
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/sdkio",
+    "internal/sdkrand",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/eventstream",
+    "private/protocol/eventstream/eventstreamapi",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/restxml",
+    "private/protocol/xml/xmlutil",
+    "service/s3",
+    "service/s3/s3iface",
+    "service/s3/s3manager",
+    "service/sts"
+  ]
+  revision = "152e9ff2c63af90874bf3eff1286acee291d0065"
+  version = "v1.14.2"
 
 [[projects]]
-  name = "github.com/mattn/go-colorable"
+  name = "github.com/go-ini/ini"
   packages = ["."]
-  revision = "167de6bfdfba052fa6b2d3664c8f5272e23c9072"
-  version = "v0.0.9"
+  revision = "06f5f3d67269ccec1fe5fe4134ba6e982984f7f5"
+  version = "v1.37.0"
 
 [[projects]]
-  name = "github.com/mattn/go-isatty"
+  name = "github.com/jmespath/go-jmespath"
   packages = ["."]
-  revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
-  version = "v0.0.3"
+  revision = "0b12d6b5"
 
 [[projects]]
   name = "github.com/sirupsen/logrus"
@@ -49,6 +81,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "23e3a475e2fe397bc1040027e72632268f18607bcf4fb040cde9b430244d40ef"
+  inputs-digest = "95defa2fc82cecdc12da296ca09853842b69aeb50cfbf96074dde76f2d65e987"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -26,10 +26,6 @@
 
 
 [[constraint]]
-  name = "github.com/k0kubun/pp"
-  version = "2.3.0"
-
-[[constraint]]
   name = "github.com/sirupsen/logrus"
   version = "1.0.5"
 

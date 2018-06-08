@@ -67,7 +67,7 @@ func (cli *CLI) Run(args []string) int {
 		return ExitCodeOK
 	}
 
-	s, err := NewSthree(awsID, awsKey, region, bucket, path)
+	s, err := newSthree(awsID, awsKey, region, bucket, path)
 
 	if err != nil {
 		logrus.Fatal(err)
@@ -97,7 +97,7 @@ func assignEnv(v *string, key string) {
 	}
 }
 
-func NewSthree(id, key, region, bucket, path string) (*sthree, error) {
+func newSthree(id, key, region, bucket, path string) (*sthree, error) {
 	assignEnv(&id, "AWS_ACCESS_KEY_ID")
 	assignEnv(&key, "AWS_SECRET_ACCESS_KEY")
 	assignEnv(&region, "AWS_REGION")
