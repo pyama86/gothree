@@ -85,7 +85,7 @@ func Test_saveName(t *testing.T) {
 		{
 			name: "last 1 day",
 			args: args{
-				filePath: "/path/to/example",
+				filePath: "/path/to/example.1",
 			},
 			want: want,
 		},

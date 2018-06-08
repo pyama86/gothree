@@ -125,7 +125,7 @@ func today() string {
 }
 
 func saveName(filePath string) string {
-	rep := regexp.MustCompile(fmt.Sprintf(`(\.gz$|[-\.]%s)`, today()))
+	rep := regexp.MustCompile(fmt.Sprintf(`(\.1$|\.gz$|[-\.]%s)`, today()))
 	filePath = rep.ReplaceAllString(filePath, "")
 
 	return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today()))
