@@ -2,9 +2,9 @@
 
 XC_OS='linux darwin'
 XC_ARCH=amd64
-XC_NAME=pmr
+XC_NAME=gothree
 
-VERSION=${1:-$(cat version)}
+VERSION=${1:-$(grep 'const Version' version.go | sed -e 's/.*= //g' -e 's/"//g')}
 REVISION=${2:-$(git describe --always)}
 GOVERSION=$(go version)
 BUILDDATE=$(date '+%Y/%m/%d %H:%M:%S %Z')

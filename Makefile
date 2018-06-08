@@ -1,5 +1,5 @@
 TEST ?= $(shell go list ./... | grep -v vendor)
-VERSION = $(shell grep Version version.go | sed -e 's/.*= //g' -e 's/"//g')
+VERSION = $(shell grep 'const Version' version.go | sed -e 's/.*= //g' -e 's/"//g')
 REVISION = $(shell git describe --always)
 
 INFO_COLOR=\033[1;34m
@@ -41,3 +41,7 @@ build: ## Build as linux binary
 
 dist: build ## Upload to Github releases
 	@test -z $(GITHUB_TOKEN) || test -z $(GITHUB_API) || $(MAKE) ghr
+
+dev:
+	docker build -t gothree .
+	docker run --rm -it gothree
