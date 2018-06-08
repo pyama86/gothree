@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -52,7 +53,7 @@ func (cli *CLI) Run(args []string) int {
 	flags.StringVar(&awsID, "access-key-id", "", "Please specify access key id of aws")
 	flags.StringVar(&region, "region", "ap-northeast-1", "Please specify region of aws")
 	flags.StringVar(&bucket, "bucket", "", "Please specify bucket of aws s3")
-	flags.StringVar(&path, "path", "", "Please specify path of aws s3")
+	flags.StringVar(&path, "path", "/", "Please specify path of aws s3")
 	flags.BoolVar(&version, "version", false, "Print version information and quit.")
 
 	// Parse commandline flag
@@ -66,14 +67,18 @@ func (cli *CLI) Run(args []string) int {
 		return ExitCodeOK
 	}
 
-	s, err := NewSthree(awsID, awsKey, region, bucket)
+	s, err := NewSthree(awsID, awsKey, region, bucket, path)
 
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
 	for _, n := range flags.Args() {
-		s.Put(n)
+		logrus.Infof("start upload %s", n)
+		if err := s.Put(n); err != nil {
+			logrus.Error(err)
+		}
+
 	}
 	return ExitCodeOK
 }
@@ -83,6 +88,7 @@ type sthree struct {
 	AccessKeyID     string `validate:"required"`
 	Region          string `validate:"required"`
 	Bucket          string `validate:"required"`
+	Path            string `validate:"required"`
 }
 
 func assignEnv(v *string, key string) {
@@ -91,16 +97,18 @@ func assignEnv(v *string, key string) {
 	}
 }
 
-func NewSthree(id, key, region, bucket string) (*sthree, error) {
+func NewSthree(id, key, region, bucket, path string) (*sthree, error) {
 	assignEnv(&id, "AWS_ACCESS_KEY_ID")
 	assignEnv(&key, "AWS_SECRET_ACCESS_KEY")
 	assignEnv(&region, "AWS_REGION")
+	assignEnv(&bucket, "AWS_BUCKET")
 
 	s := &sthree{
 		AccessKeyID:     id,
 		SecretAccessKey: key,
 		Region:          region,
 		Bucket:          bucket,
+		Path:            path,
 	}
 	config := &validator.Config{TagName: "validate"}
 	validate := validator.New(config)
@@ -122,7 +130,7 @@ func saveName(filePath string) string {
 	today := t.Format("20060102")
 
 	name := replaceExt(filePath, "1.gz", today+".gz")
-	return replaceExt(name, "1", today+".gz")
+	return filepath.Base(replaceExt(name, "1", today+".gz"))
 }
 
 func (s *sthree) Put(filePath string) error {
@@ -160,12 +168,13 @@ func (s *sthree) Put(filePath string) error {
 	uploader := s3manager.NewUploader(st)
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(s.Bucket),
-		Key:    aws.String(saveName(filePath)),
+		Key:    aws.String(filepath.Join(s.Path, saveName(filePath))),
 		Body:   reader,
 	})
 
 	if err != nil {
 		return err
 	}
+	logrus.Infof("upload success: %s", result.Location)
 	return nil
 }

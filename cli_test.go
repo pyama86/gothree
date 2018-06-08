@@ -111,7 +111,7 @@ func Test_replaceExt(t *testing.T) {
 func Test_saveName(t *testing.T) {
 	n := time.Now().Local()
 	today := n.Format("20060102")
-	want := "/path/to/example." + today + ".gz"
+	want := "example." + today + ".gz"
 
 	type args struct {
 		filePath string
