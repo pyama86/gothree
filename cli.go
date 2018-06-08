@@ -74,7 +74,6 @@ func (cli *CLI) Run(args []string) int {
 	}
 
 	for _, n := range flags.Args() {
-		logrus.Infof("start upload %s", n)
 		if err := s.Put(n); err != nil {
 			logrus.Error(err)
 		}
@@ -166,6 +165,7 @@ func (s *sthree) Put(filePath string) error {
 	}
 
 	uploader := s3manager.NewUploader(st)
+	logrus.Infof("start upload file:%s save: %s", filePath, saveName(filePath))
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(s.Bucket),
 		Key:    aws.String(filepath.Join(s.Path, saveName(filePath))),
