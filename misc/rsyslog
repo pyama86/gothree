@@ -1,0 +1,14 @@
+/var/log/syslog
+/var/log/kern.log
+{
+        rotate 7
+        daily
+        missingok
+        notifempty
+        delaycompress
+        compress
+        dateext
+        postrotate
+          /usr/local/bin/gothree $1
+        endscript
+}
