@@ -89,6 +89,13 @@ func Test_saveName(t *testing.T) {
 			},
 			want: want,
 		},
+		{
+			name: "date-ext",
+			args: args{
+				filePath: fmt.Sprintf("/path/to/example.%s", today),
+			},
+			want: want,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

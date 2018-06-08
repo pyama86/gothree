@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -118,14 +119,45 @@ func newSthree(id, key, region, bucket, path string) (*sthree, error) {
 
 }
 
-func saveName(filePath string) string {
+func today() string {
 	t := time.Now().Local()
-	today := t.Format("20060102")
-	return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today))
+	return t.Format("20060102")
+}
+
+func saveName(filePath string) string {
+	rep := regexp.MustCompile(`\.gz$`)
+	filePath = rep.ReplaceAllString(filePath, "")
+
+	rep = regexp.MustCompile(fmt.Sprintf(`[-\.]%s`, today()))
+	filePath = rep.ReplaceAllString(filePath, "")
+
+	return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today()))
+}
+
+func exists(name string) bool {
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
+}
+
+func lotateFileName(filePath string) string {
+	num := fmt.Sprintf("%s.1", filePath)
+	day := fmt.Sprintf("%s-%s", filePath, today())
+	daydot := fmt.Sprintf("%s.%s", filePath, today())
+
+	if exists(num) {
+		return num
+	} else if exists(day) {
+		return day
+	} else if exists(daydot) {
+		return daydot
+	}
+	return filePath
 }
 
 func (s *sthree) Put(filePath string) error {
 	var reader io.Reader
+
+	filePath = lotateFileName(filePath)
 	file, err := os.Open(filePath)
 	if err != nil {
 		return err
