@@ -4,4 +4,4 @@ package main
 const Name string = "gothree"
 
 // Version is product version
-const Version string = "0.1.2"
+const Version string = "0.1.3"
