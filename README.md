@@ -6,13 +6,60 @@
 
 ## Usage
 
+```bash
+Usage of gothree:
+  -access-key-id string
+        Please specify access key id of aws
+  -bucket string
+        Please specify bucket of aws s3
+  -path string
+        Please specify path of aws s3 (default "/")
+  -region string
+        Please specify region of aws (default "ap-northeast-1")
+  -secret-access-key string
+        Please specify secret access key of aws
+  -version
+        Print version information and quit.
+```
+
+### gothree is used in combination with logrotate
+
+- logrotate config
+```
+/var/log/syslog
+/var/log/auth
+{
+        rotate 7
+        daily
+        missingok
+        notifempty
+        delaycompress
+        compress
+        postrotate
+          source /root/.aws
+          /usr/local/bin/gothree $1
+        endscript
+}
+```
+
+```
+$ cat /root/.aws
+export AWS_ACCESS_KEY_ID=***********
+export AWS_SECRET_ACCESS_KEY=***********
+export AWS_REGION=your region
+export AWS_BUCKET=your buket name
+```
+
 ## Install
 
 To install, use `go get`:
-
 ```bash
 $ go get -d github.com/pyama86/gothree
 ```
+
+## Download
+
+[We prepare binareis](https://github.com/pyama86/gothree/releases)
 
 ## Contribution
 
