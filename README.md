@@ -1,8 +1,8 @@
 # gothree
-
-
+[![Build Status](https://travis-ci.org/pyama86/gothree.svg?branch=master)](https://travis-ci.org/pyama86/gothree)
 
 ## Description
+
 
 ## Usage
 
