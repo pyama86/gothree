@@ -40,7 +40,7 @@ build: ## Build as linux binary
 	./misc/build $(VERSION) $(REVISION)
 
 dist: build ## Upload to Github releases
-	@test -z $(GITHUB_TOKEN) || test -z $(GITHUB_API) || $(MAKE) ghr
+	@test -z $(GITHUB_TOKEN) || $(MAKE) ghr
 
 dev:
 	docker build -t gothree .
