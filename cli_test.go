@@ -96,11 +96,45 @@ func Test_saveName(t *testing.T) {
 			},
 			want: want,
 		},
+		{
+			name: "gz",
+			args: args{
+				filePath: "/path/to/example.gz",
+			},
+			want: want,
+		},
+		{
+			name: "date-ext.gz",
+			args: args{
+				filePath: fmt.Sprintf("/path/to/example.%s.gz", today),
+			},
+			want: want,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := saveName(tt.args.filePath); got != tt.want {
 				t.Errorf("saveName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_lotateFileName(t *testing.T) {
+	type args struct {
+		filePath string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+	// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := lotateFileName(tt.args.filePath); got != tt.want {
+				t.Errorf("lotateFileName() = %v, want %v", got, tt.want)
 			}
 		})
 	}

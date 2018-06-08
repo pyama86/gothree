@@ -125,10 +125,7 @@ func today() string {
 }
 
 func saveName(filePath string) string {
-	rep := regexp.MustCompile(`\.gz$`)
-	filePath = rep.ReplaceAllString(filePath, "")
-
-	rep = regexp.MustCompile(fmt.Sprintf(`[-\.]%s`, today()))
+	rep := regexp.MustCompile(fmt.Sprintf(`(\.gz$|[-\.]%s)`, today()))
 	filePath = rep.ReplaceAllString(filePath, "")
 
 	return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today()))
@@ -140,16 +137,16 @@ func exists(name string) bool {
 }
 
 func lotateFileName(filePath string) string {
-	num := fmt.Sprintf("%s.1", filePath)
-	day := fmt.Sprintf("%s-%s", filePath, today())
-	daydot := fmt.Sprintf("%s.%s", filePath, today())
+	patterns := []string{
+		fmt.Sprintf("%s.1", filePath),
+		fmt.Sprintf("%s-%s", filePath, today()),
+		fmt.Sprintf("%s.%s", filePath, today()),
+	}
 
-	if exists(num) {
-		return num
-	} else if exists(day) {
-		return day
-	} else if exists(daydot) {
-		return daydot
+	for _, p := range patterns {
+		if exists(p) {
+			return p
+		}
 	}
 	return filePath
 }
