@@ -42,6 +42,6 @@ build: ## Build as linux binary
 dist: build ## Upload to Github releases
 	@test -z $(GITHUB_TOKEN) || $(MAKE) ghr
 
-dev:
+dev: build
 	docker build -t gothree .
-	docker run --rm -it gothree
+	docker run --privileged --rm -e AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID -e AWS_REGION=$$AWS_REGION -e AWS_BUCKET=$$AWS_BUCKET -e AWS_SECRET_ACCESS_KEY=$$AWS_SECRET_ACCESS_KEY -it gothree
