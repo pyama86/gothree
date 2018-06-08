@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
@@ -119,17 +118,10 @@ func newSthree(id, key, region, bucket, path string) (*sthree, error) {
 
 }
 
-func replaceExt(filePath, from, to string) string {
-	rep := regexp.MustCompile(`\.` + from + `$`)
-	return rep.ReplaceAllString(filePath, "."+to)
-}
-
 func saveName(filePath string) string {
 	t := time.Now().Local()
 	today := t.Format("20060102")
-
-	name := replaceExt(filePath, "1.gz", today+".gz")
-	return filepath.Base(replaceExt(name, "1", today+".gz"))
+	return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today))
 }
 
 func (s *sthree) Put(filePath string) error {
