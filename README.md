@@ -36,8 +36,7 @@ Usage of gothree:
         delaycompress
         compress
         postrotate
-          source /root/.aws
-          /usr/local/bin/gothree $1
+          /bin/bash -c -l "source /root/.aws && /usr/local/bin/gothree $1"
         endscript
 }
 ```
