@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -71,8 +72,9 @@ func TestRun_pathFlag(t *testing.T) {
 
 func Test_saveName(t *testing.T) {
 	n := time.Now().Local()
+	os.Setenv("GOTHREE_PREFIX", "example")
 	today := n.Format("20060102")
-	want := "example." + today + ".gz"
+	want := "example-example." + today + ".gz"
 
 	type args struct {
 		filePath string

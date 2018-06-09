@@ -128,7 +128,16 @@ func saveName(filePath string) string {
 	rep := regexp.MustCompile(fmt.Sprintf(`(\.1$|\.gz$|[-\.]%s)`, today()))
 	filePath = rep.ReplaceAllString(filePath, "")
 
-	return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today()))
+	hostname, err := os.Hostname()
+	if err != nil {
+		logrus.Error(err)
+		return filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today()))
+	}
+
+	if os.Getenv("GOTHREE_PREFIX") != "" {
+		hostname = os.Getenv("GOTHREE_PREFIX")
+	}
+	return fmt.Sprintf("%s-%s", hostname, filepath.Base(fmt.Sprintf("%s.%s.gz", filePath, today())))
 }
 
 func exists(name string) bool {
