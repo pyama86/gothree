@@ -36,11 +36,12 @@ type CLI struct {
 // Run invokes the CLI with the given arguments.
 func (cli *CLI) Run(args []string) int {
 	var (
-		awsKey string
-		awsID  string
-		region string
-		bucket string
-		path   string
+		awsKey      string
+		awsID       string
+		region      string
+		bucket      string
+		path        string
+		concurrency int
 
 		version bool
 	)
@@ -54,6 +55,7 @@ func (cli *CLI) Run(args []string) int {
 	flags.StringVar(&region, "region", "ap-northeast-1", "Please specify region of aws")
 	flags.StringVar(&bucket, "bucket", "", "Please specify bucket of aws s3")
 	flags.StringVar(&path, "path", "/", "Please specify path of aws s3")
+	flags.IntVar(&concurrency, "concurrency", 5, "Upload concurrency")
 	flags.BoolVar(&version, "version", false, "Print version information and quit.")
 
 	// Parse commandline flag
@@ -67,7 +69,7 @@ func (cli *CLI) Run(args []string) int {
 		return ExitCodeOK
 	}
 
-	s, err := newSthree(awsID, awsKey, region, bucket, path)
+	s, err := newSthree(awsID, awsKey, region, bucket, path, concurrency)
 
 	if err != nil {
 		logrus.Fatal(err)
@@ -88,6 +90,7 @@ type sthree struct {
 	Region          string `validate:"required"`
 	Bucket          string `validate:"required"`
 	Path            string `validate:"required"`
+	Concurrency     int    `validate:"required"`
 }
 
 func assignEnv(v *string, key string) {
@@ -96,7 +99,7 @@ func assignEnv(v *string, key string) {
 	}
 }
 
-func newSthree(id, key, region, bucket, path string) (*sthree, error) {
+func newSthree(id, key, region, bucket, path string, concurrency int) (*sthree, error) {
 	assignEnv(&id, "AWS_ACCESS_KEY_ID")
 	assignEnv(&key, "AWS_SECRET_ACCESS_KEY")
 	assignEnv(&region, "AWS_REGION")
@@ -108,6 +111,7 @@ func newSthree(id, key, region, bucket, path string) (*sthree, error) {
 		Region:          region,
 		Bucket:          bucket,
 		Path:            path,
+		Concurrency:     concurrency,
 	}
 	config := &validator.Config{TagName: "validate"}
 	validate := validator.New(config)
@@ -195,6 +199,7 @@ func (s *sthree) Put(filePath string) error {
 	}
 
 	uploader := s3manager.NewUploader(st)
+	uploader.Concurrency = s.Concurrency
 	logrus.Infof("start upload file:%s save: %s", filePath, saveName(filePath))
 	result, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(s.Bucket),
