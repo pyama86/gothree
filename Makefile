@@ -8,13 +8,7 @@ BOLD=\033[1m
 
 default: build
 ci: depsdev test vet lint ## Run test and more...
-deps: ## Install dependencies
-	@echo "$(INFO_COLOR)==> $(RESET)$(BOLD)Installing Dependencies$(RESET)"
-	go get -u github.com/golang/dep/...
-	dep ensure
-
-depsdev: deps ## Installing dependencies for development
-	go get github.com/golang/lint/golint
+depsdev: ## Installing dependencies for development
 	go get -u github.com/tcnksm/ghr
 	go get github.com/mitchellh/gox
 
